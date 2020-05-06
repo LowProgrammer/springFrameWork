@@ -50,6 +50,7 @@ import org.springframework.util.Assert;
  * @see AnnotatedBeanDefinitionReader
  * @see ClassPathBeanDefinitionScanner
  * @see org.springframework.context.support.GenericXmlApplicationContext
+ * AnnotationConfigApplicationContext<=====>BeanDefinitionRegistry</=====>
  */
 public class AnnotationConfigApplicationContext extends GenericApplicationContext implements AnnotationConfigRegistry {
 	/**
