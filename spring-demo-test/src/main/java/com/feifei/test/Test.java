@@ -4,6 +4,10 @@ import com.feifei.dao.UserDao;
 import com.feifei.dao.UserDaoImpl;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import java.util.Random;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author feifei
  * @Classname Test
@@ -20,6 +24,7 @@ public class Test {
 
 		UserDao userDao= (UserDao) configApplicationContext.getBean("userDaoImpl");
 		userDao.print();
+
 
 	}
 }

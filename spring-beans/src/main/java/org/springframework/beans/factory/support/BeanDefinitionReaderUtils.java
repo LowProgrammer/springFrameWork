@@ -150,6 +150,7 @@ public abstract class BeanDefinitionReaderUtils {
 	}
 
 	/**
+	 *这里的registry等于AnnotationConfigApplicationContext，因为reader初始化时传参设置
 	 * Register the given bean definition with the given bean factory.
 	 * @param definitionHolder the bean definition including name and aliases
 	 * @param registry the bean factory to register with

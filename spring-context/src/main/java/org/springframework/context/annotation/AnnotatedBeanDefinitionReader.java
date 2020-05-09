@@ -266,7 +266,7 @@ public class AnnotatedBeanDefinitionReader {
 
 		abd.setInstanceSupplier(supplier);
 		/**
-		 * 得到Bean的作用域
+		 * 得到Bean的作用域，是否使用代理
 		 */
 		ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(abd);
 		/**
