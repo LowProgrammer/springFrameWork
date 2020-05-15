@@ -3,7 +3,9 @@ package com.feifei.test;
 import com.feifei.dao.UserDao;
 import com.feifei.dao.UserDaoImpl;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.core.env.StandardEnvironment;
 
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.TimeUnit;
@@ -16,15 +18,14 @@ import java.util.concurrent.TimeUnit;
  * @Created by 陈群飞
  */
 public class Test {
-
 	public static void main(String[] args) {
 		AnnotationConfigApplicationContext configApplicationContext=new AnnotationConfigApplicationContext();
 		configApplicationContext.register(UserDaoImpl.class);
 		configApplicationContext.refresh();
 
+
 		UserDao userDao= (UserDao) configApplicationContext.getBean("userDaoImpl");
 		userDao.print();
-
 
 	}
 }

@@ -255,6 +255,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		}
 
 		enhanceConfigurationClasses(beanFactory);
+		//添加后置处理器ImportAwareBeanPostProcessor
 		beanFactory.addBeanPostProcessor(new ImportAwareBeanPostProcessor(beanFactory));
 	}
 
@@ -263,17 +264,27 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	 * {@link Configuration} classes.
 	 */
 	public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {
+		//app提供的bean
 		List<BeanDefinitionHolder> configCandidates = new ArrayList<>();
+		//获取容器中注册的所有bean的名字
 		String[] candidateNames = registry.getBeanDefinitionNames();
 
 		for (String beanName : candidateNames) {
 			BeanDefinition beanDef = registry.getBeanDefinition(beanName);
 			if (beanDef.getAttribute(ConfigurationClassUtils.CONFIGURATION_CLASS_ATTRIBUTE) != null) {
+				//如果BeanDefinition中的configurationClass属性为full或者lite，则意味着已经处理过了，直接
+				//这里需要结合下面代码才能理解
 				if (logger.isDebugEnabled()) {
 					logger.debug("Bean definition has already been processed as a configuration class: " + beanDef);
 				}
 			}
+			/**
+			 * 判断是否是Configuration类（注解），如果加了Configuration下面这几个注解就不会判断下面几个了
+			 * 还有Component、ComponentScan、Import、ImportResource注解
+			 *
+			 */
 			else if (ConfigurationClassUtils.checkConfigurationClassCandidate(beanDef, this.metadataReaderFactory)) {
+				//BeanDefinitionHolder 也可以看成一个数据结构
 				configCandidates.add(new BeanDefinitionHolder(beanDef, beanName));
 			}
 		}
