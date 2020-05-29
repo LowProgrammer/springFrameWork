@@ -121,11 +121,27 @@ abstract class ConfigurationClassUtils {
 			}
 		}
 
+		/**
+		 * spring方法升级
+		 * 判断当前这个bd中存在的类是不是加了@configuration注解
+		 *
+		 * 如果存在则spring认为他是全注解的类
+		 * 如果不存在spring则认为它是一个部分注解的类
+		 */
 		Map<String, Object> config = metadata.getAnnotationAttributes(Configuration.class.getName());
 		if (config != null && !Boolean.FALSE.equals(config.get("proxyBeanMethods"))) {
+			//设置configurationClass属性为full
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_FULL);
 		}
+		//判断是否加了以下注解，
+		//static {
+		//		candidateIndicators.add(Component.class.getName());
+		//		candidateIndicators.add(ComponentScan.class.getName());
+		//		candidateIndicators.add(Import.class.getName());
+		//		candidateIndicators.add(ImportResource.class.getName());
+		//	}
 		else if (config != null || isConfigurationCandidate(metadata)) {
+			//设置configurationClass属性为lite
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_LITE);
 		}
 		else {
