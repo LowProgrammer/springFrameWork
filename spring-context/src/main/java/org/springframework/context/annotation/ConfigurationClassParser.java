@@ -314,7 +314,21 @@ class ConfigurationClassParser {
 
 		//处理@Import注解 3种情况
 		//①普通类②ImportBeanDefinitionRegistar③ImportSelector
+		//这里和内部递归调用不同
 		// Process any @Import annotations
+		/**
+		 * 这里处理的import是需要判断我们的类当中有@Import 注解
+		 * 如果有值 把@Import当中的值取出来，是一个类
+		 * 比如@Import(xxxxx.class) ，那么这里便把xxxxx传进去进行解析
+		 * 在解析的过程中如果发觉是一个importSelector那么就会调用selector的方法
+		 * 返回一个字符串（类名），通过这个字符串得到一个类
+		 * 继而再递归调用本方法求出来这个类
+		 * 为什么要单独写这么多注释说明这个方法
+		 * 因为selector返回的那个类，严格意义上来讲不符合@Import(xxxx.class)，因为这个类没有被Import
+		 * 如果不符合，就不会调用这个方法getImports(sourceClass)的，意思是直接把selector当中返回的类直接当成一个import的类去解析
+		 * 总之就是一句话，@Import(xxx.class)，那么xxx这个类会被解析
+		 * 如果xxx是selector，那么他当中返回的类虽然没有直接加上@Import，但是也会直接解析
+		 */
 		processImports(configClass, sourceClass, getImports(sourceClass), filter, true);
 
 		// Process any @ImportResource annotations
@@ -588,8 +602,11 @@ class ConfigurationClassParser {
 							this.deferredImportSelectorHandler.handle(configClass, (DeferredImportSelector) selector);
 						}
 						else {
+							//回调
 							String[] importClassNames = selector.selectImports(currentSourceClass.getMetadata());
 							Collection<SourceClass> importSourceClasses = asSourceClasses(importClassNames, exclusionFilter);
+							//递归，这里第二次调用processImports
+							//如果是一个普通类，就会返回false
 							processImports(configClass, currentSourceClass, importSourceClasses, exclusionFilter, false);
 						}
 					}
@@ -600,11 +617,19 @@ class ConfigurationClassParser {
 						ImportBeanDefinitionRegistrar registrar =
 								ParserStrategyUtils.instantiateClass(candidateClass, ImportBeanDefinitionRegistrar.class,
 										this.environment, this.resourceLoader, this.registry);
+						//添加到一个list当中和@ImportSelector不同
 						configClass.addImportBeanDefinitionRegistrar(registrar, currentSourceClass.getMetadata());
 					}
 					else {
 						// Candidate class not an ImportSelector or ImportBeanDefinitionRegistrar ->
 						// process it as an @Configuration class
+						/**
+						 * 否则，加入到ImportStack后调用processConfigurationClass进行处理
+						 * processConfigurationClasses里面主要就是把类放到configurationClasses
+						 * configurationClasses是一个集合，会在后面拿出来解析成bd继而注册
+						 * 可以看到普通类在扫描出来的时候就被注册了
+						 * 如果是ImportSelector，会先放到configurationClasses后面再进行注册
+						 */
 						this.importStack.registerImport(
 								currentSourceClass.getMetadata(), candidate.getMetadata().getClassName());
 						processConfigurationClass(candidate.asConfigClass(configClass), exclusionFilter);

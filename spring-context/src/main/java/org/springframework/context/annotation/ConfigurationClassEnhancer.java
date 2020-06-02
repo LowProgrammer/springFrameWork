@@ -106,6 +106,8 @@ class ConfigurationClassEnhancer {
 			}
 			return configClass;
 		}
+
+		//cglib代理
 		Class<?> enhancedClass = createClass(newEnhancer(configClass, classLoader));
 		if (logger.isTraceEnabled()) {
 			logger.trace(String.format("Successfully enhanced %s; enhanced class name is: %s",
@@ -119,11 +121,26 @@ class ConfigurationClassEnhancer {
 	 */
 	private Enhancer newEnhancer(Class<?> configSuperClass, @Nullable ClassLoader classLoader) {
 		Enhancer enhancer = new Enhancer();
+		//增强父类，
 		enhancer.setSuperclass(configSuperClass);
+		//增强接口，为什么增强接口?
+		//获取beanFactory
 		enhancer.setInterfaces(new Class<?>[] {EnhancedConfiguration.class});
+
 		enhancer.setUseFactory(false);
 		enhancer.setNamingPolicy(SpringNamingPolicy.INSTANCE);
+
+		/**
+		 * BeanFactoryAwareGenerator是一个生成策略
+		 * 主要为生成的CGLIB类中添加成员变量$$beanFactory
+		 * 同时基于接口EnhanceConfiguration的父接口BeanFactoryAware中的setBeanFactory方法
+		 * 设置此变量的值为当前Context中的beanFactory，这样一来我们这个cglib代理的对象就有了beanFactory
+		 * 有了factory就能获取对象，而不用去通过方法获得对象了，因为通过方法获得对象不能控制器
+		 * 该beanFactory的作用是在this调用时拦截该调用，并直接在beanFactory中获取目标bean
+		 */
 		enhancer.setStrategy(new BeanFactoryAwareGeneratorStrategy(classLoader));
+
+		//过滤方法
 		enhancer.setCallbackFilter(CALLBACK_FILTER);
 		enhancer.setCallbackTypes(CALLBACK_FILTER.getCallbackTypes());
 		return enhancer;
