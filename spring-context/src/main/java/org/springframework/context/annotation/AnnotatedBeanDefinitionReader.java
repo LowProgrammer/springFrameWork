@@ -260,7 +260,7 @@ public class AnnotatedBeanDefinitionReader {
 		AnnotatedGenericBeanDefinition abd = new AnnotatedGenericBeanDefinition(beanClass);
 		/**
 		 * 判断这个Bean是否需要跳过解析
-		 * 通过代码可以知道Spring
+		 * 通过代码可以知道Spring判断是否加了@Condition注解，且不符合条件的跳过解析
 		 */
 		if (this.conditionEvaluator.shouldSkip(abd.getMetadata())) {
 			return;
