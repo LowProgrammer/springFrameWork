@@ -1,5 +1,6 @@
 package com.feifei.test;
 
+import com.feifei.config.AppConfig;
 import com.feifei.dao.UserDao;
 import com.feifei.dao.UserDaoImpl;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -20,12 +21,13 @@ import java.util.concurrent.TimeUnit;
 
 public class Test {
 	public static void main(String[] args) {
-		AnnotationConfigApplicationContext configApplicationContext=new AnnotationConfigApplicationContext();
-		configApplicationContext.register(UserDaoImpl.class);
-		configApplicationContext.refresh();
+//		AnnotationConfigApplicationContext configApplicationContext=new AnnotationConfigApplicationContext();
+//		configApplicationContext.register(UserDaoImpl.class);
+//		configApplicationContext.refresh();
 
 
-		UserDao userDao= (UserDao) configApplicationContext.getBean("userDaoImpl");
+		AnnotationConfigApplicationContext configApplicationContext1=new AnnotationConfigApplicationContext(AppConfig.class);
+		UserDao userDao= (UserDao) configApplicationContext1.getBean("userDaoImpl");
 		userDao.print();
 
 	}
