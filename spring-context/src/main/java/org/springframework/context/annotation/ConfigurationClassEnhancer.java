@@ -99,7 +99,7 @@ class ConfigurationClassEnhancer {
 	 */
 	public Class<?> enhance(Class<?> configClass, @Nullable ClassLoader classLoader) {
 		//判断是否被代理过
-		//（判断这个类是不是实现了接口）
+		//（判断这个类是不是实现了接口EnhancedConfiguration）
 		if (EnhancedConfiguration.class.isAssignableFrom(configClass)) {
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format("Ignoring request to enhance %s as it has " +

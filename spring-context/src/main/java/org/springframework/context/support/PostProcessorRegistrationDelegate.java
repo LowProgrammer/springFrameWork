@@ -153,6 +153,7 @@ final class PostProcessorRegistrationDelegate {
 			//执行BeanFactoryPostProcessor的回调，不是吗？
 			//前面执行的是BeanFactoryPostProcessor的子类BeanDefinitionRegistryProcessor的回调
 			//这里执行的是BeanFactoryPostProcessor
+			//代理的实现也是在这里完成的
 			invokeBeanFactoryPostProcessors(registryProcessors, beanFactory);
 			invokeBeanFactoryPostProcessors(regularPostProcessors, beanFactory);
 		}
