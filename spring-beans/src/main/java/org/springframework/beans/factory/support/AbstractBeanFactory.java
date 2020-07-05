@@ -245,9 +245,24 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		final String beanName = transformedBeanName(name);
 		Object bean;
 
+		/**
+		 * 这个方法在初始化的时候会调用，在getBean的时候也会调用
+		 * 为什么需要这么做呢?
+		 * 也就是说spring在初始化的时候先获取这个对象
+		 * 判断这个对象是否被实例化好了
+		 * 从spring的bean容器中获取一个bean，由于spring中bean容器是一个map（singletonObjects）
+		 * 所以你可以理解getSingleton(beanName)等于beanMap.get(beanName)
+		 * 由于方法会在spring环境初始化的时候（就是对象被创建的时候调用一次）调用一次
+		 * 还会在getBean的时候调用一次
+		 * 所以在调试的时候需要特别注意，不能直接断点在这里
+		 * 需要先进入到annotationConfigApplicationContext.getBean(IndexDao.class)
+		 * 之后再来断点，这样就确保了我们是在获取这个bean的时候调用的
+		 * 需要说明的是在初始化时候调用一般都是返回null
+		 */
 		// Eagerly check singleton cache for manually registered singletons.
 		Object sharedInstance = getSingleton(beanName);
 		if (sharedInstance != null && args == null) {
+			//这里的代码是对于日志的记录，方便我们以后阅读应该注释，不影响spring
 			if (logger.isTraceEnabled()) {
 				if (isSingletonCurrentlyInCreation(beanName)) {
 					logger.trace("Returning eagerly cached instance of singleton bean '" + beanName +
@@ -263,6 +278,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		else {
 			// Fail if we're already creating this bean instance:
 			// We're assumably within a circular reference.
+			//原型
+			//如果是原型不应该在初始化的时候创建（前面已经添加了判断isSingleton）
 			if (isPrototypeCurrentlyInCreation(beanName)) {
 				throw new BeanCurrentlyInCreationException(beanName);
 			}
@@ -290,6 +307,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 
 			if (!typeCheckOnly) {
+				//添加到alreadyCreated set集合当中，表示已经创建过一次
 				markBeanAsCreated(beanName);
 			}
 
