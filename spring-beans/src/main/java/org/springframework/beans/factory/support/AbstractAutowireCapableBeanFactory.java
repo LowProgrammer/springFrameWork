@@ -558,6 +558,16 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			instanceWrapper = this.factoryBeanInstanceCache.remove(beanName);
 		}
 		if (instanceWrapper == null) {
+			/**
+			 * 创建bean实例，并将实例包裹在beanWapper实现类对象中返回
+			 * createBeanInstance中包含三种实例的方式
+			 * ①通过工厂方法创建bean实例
+			 * ②通过构造方法自动注入（autowire by constructor）的方式创建bean实例
+			 * ③通过无参构造方法创建bean实例
+			 *
+			 * 若bean的配置信息系中配置了lookup-method 和 replace-method，则会使用CGLB
+			 * 增强bean实例，关于lookup-method和replace-method后面再说
+			 */
 			instanceWrapper = createBeanInstance(beanName, mbd, args);
 		}
 		final Object bean = instanceWrapper.getWrappedInstance();
