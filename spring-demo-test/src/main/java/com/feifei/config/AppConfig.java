@@ -2,10 +2,10 @@ package com.feifei.config;
 
 import com.feifei.beanAnnoT.BeanAnnotationTest;
 import com.feifei.dao.UserDaoImpl2;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.*;
+import org.springframework.core.annotation.AliasFor;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * @author feifei
@@ -17,6 +17,8 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @ComponentScan("com.feifei.dao")
 @Import(UserDaoImpl2.class)
+@EnableAspectJAutoProxy
+@EnableTransactionManagement
 public class AppConfig {
 	@Bean
 	public   BeanAnnotationTest getBeanAnno(){

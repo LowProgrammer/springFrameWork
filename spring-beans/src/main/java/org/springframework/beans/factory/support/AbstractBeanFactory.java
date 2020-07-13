@@ -234,8 +234,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 * @param args arguments to use when creating a bean instance using explicit arguments
 	 * (only applied when creating a new instance as opposed to retrieving an existing one)
 	 * @param typeCheckOnly whether the instance is obtained for a type check,
-	 * not for actual use
-	 * @return an instance of the bean
+	 * 	 * not for actual use
+	 * 	 * @return an instance of the bean
 	 * @throws BeansException if the bean could not be created
 	 */
 	@SuppressWarnings("unchecked")

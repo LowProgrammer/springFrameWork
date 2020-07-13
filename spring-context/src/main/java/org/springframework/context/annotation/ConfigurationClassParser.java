@@ -192,16 +192,34 @@ class ConfigurationClassParser {
 		this.deferredImportSelectorHandler.process();
 	}
 
+	/**
+	 * 根据类名解析definition
+	 * @param className
+	 * @param beanName
+	 * @throws IOException
+	 */
 	protected final void parse(@Nullable String className, String beanName) throws IOException {
 		Assert.notNull(className, "No bean class name for configuration class bean definition");
 		MetadataReader reader = this.metadataReaderFactory.getMetadataReader(className);
 		processConfigurationClass(new ConfigurationClass(reader, beanName), DEFAULT_EXCLUSION_FILTER);
 	}
 
+	/**
+	 * 根据Class来解析definition
+	 * @param clazz
+	 * @param beanName
+	 * @throws IOException
+	 */
 	protected final void parse(Class<?> clazz, String beanName) throws IOException {
 		processConfigurationClass(new ConfigurationClass(clazz, beanName), DEFAULT_EXCLUSION_FILTER);
 	}
 
+	/**
+	 * 根据被添加注解@Configuration解析definition
+	 * @param metadata
+	 * @param beanName
+	 * @throws IOException
+	 */
 	protected final void parse(AnnotationMetadata metadata, String beanName) throws IOException {
 		processConfigurationClass(new ConfigurationClass(metadata, beanName), DEFAULT_EXCLUSION_FILTER);
 	}

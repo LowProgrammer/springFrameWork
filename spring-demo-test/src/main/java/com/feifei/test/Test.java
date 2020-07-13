@@ -30,5 +30,6 @@ public class Test {
 		UserDao userDao= (UserDao) configApplicationContext1.getBean("userDaoImpl");
 		userDao.print();
 
+
 	}
 }

@@ -279,7 +279,6 @@ public class AnnotatedBeanDefinitionReader {
 		 * Bean的name
 		 */
 		String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
-
 		/**
 		 * 常用属性设置
 		 */

@@ -111,7 +111,9 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
 		//这里由于有父类，故而会先调用父类的构造方法，然后才会调用自己的构造方法
 		//在自己构造方法中初始一个读取器和扫描器
+		//beanDefinitionNames和beanDefinitionMap添加5个beanDefinition
 		this();
+		//beanDefinitionNames和beanDefinitionMap添加Appconfig
 		register(componentClasses);
 		refresh();
 	}
